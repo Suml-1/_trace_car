@@ -1,0 +1,180 @@
+C51 COMPILER V9.54   CAR_MOVE                                                              04/17/2025 09:23:28 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE CAR_MOVE
+OBJECT MODULE PLACED IN .\Objects\Car_Move.obj
+COMPILER INVOKED BY: D:\KEIL 5C51\C51\BIN\C51.EXE Car_Move.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\Car_Move.lst) OBJECT(.\Objects\Car_Move.obj)
+
+line level    source
+
+   1          /*小车运动方向*/
+   2          /*
+   3          向前直行 四电机正转
+   4          向后直行 四电机反转
+   5          向前左拐 右电机正转，左电机停止或反转
+   6          向前右拐 左电机正转，右电机停止或反转
+   7          向后左拐 右电机反转，左电机停止或正转
+   8          向后右拐 左电机反转，右电机停止或正转
+   9          停    止 四电机停止
+  10          */
+  11          /*小车运动方向*/
+  12          
+  13          
+  14          #include <REGX52.H>
+  15          #include "Motor.h"
+  16          
+  17          /*
+  18          !!!!!!!!!!!!!!!!!
+  19          关于以下函数的形参speed
+  20          通过小车的speed控制电机的速度
+  21          motor模块函数默认值为小车模块函数输入值，
+  22          可对其值进行修改调试，
+  23          以更好驱动小车转弯。  
+  24          !!!!!!!!!!!!!!!!!
+  25          */
+  26          
+  27          /**
+  28            * @brief  通过控制电机来控制小车前进
+  29            * @param  speed 速度（0-20）
+  30            * @retval 无
+  31            */
+  32          void Car_Go(unsigned char speed)
+  33          {
+  34   1              Motor_RF_go(speed-1);           //右前电机正转
+  35   1              Motor_LF_go(speed);                     //左前电机正转
+  36   1              Motor_LR_go(speed);                     //左后电机正转    
+  37   1              Motor_RR_go(speed-1);           //右后电机正转    
+  38   1      }
+  39          
+  40          
+  41          /**
+  42            * @brief  通过控制电机来控制小车后退
+  43            * @param  speed 速度（0-20）
+  44            * @retval 无
+  45            */
+  46          void Car_Back(unsigned char speed)
+  47          {
+  48   1              Motor_RF_back(speed);           //右前电机反转
+  49   1              Motor_LF_back(speed);           //左前电机反转
+  50   1              Motor_LR_back(speed);           //左后电机反转    
+  51   1              Motor_RR_back(speed);           //右后电机反转
+  52   1      }
+  53          
+  54          /**
+C51 COMPILER V9.54   CAR_MOVE                                                              04/17/2025 09:23:28 PAGE 2   
+
+  55            * @brief  通过控制电机来控制小车停止
+  56            * @param  无
+  57            * @retval 无
+  58            */
+  59          void Car_Stop(void)
+  60          {
+  61   1              Motor_RF_stop();                        //右前电机停止
+  62   1              Motor_LF_stop();                        //左前电机停止
+  63   1              Motor_LR_stop();                        //左后电机停止
+  64   1              Motor_RR_stop();                        //右后电机停止    
+  65   1      }
+  66          
+  67          
+  68          
+  69          /**
+  70            * @brief  通过控制电机来控制小车前进左转
+  71            * @param  speed 速度（0-20）
+  72            * @retval 无
+  73            */
+  74          void Car_Left_Go(unsigned char speed)
+  75          {
+  76   1              Motor_RF_go(speed);                     //右前电机正转
+  77   1              Motor_RR_go(speed);                     //右后电机正转
+  78   1              Motor_LF_stop();                        //左前电机停止
+  79   1              Motor_LR_stop();                        //左后电机停止    
+  80   1      }
+  81          
+  82          
+  83          /**
+  84            * @brief  通过控制电机来控制小车前进右转
+  85            * @param  speed 速度（0-20）
+  86            * @retval 无
+  87            */
+  88          void Car_Right_Go(unsigned char speed)
+  89          {
+  90   1              Motor_LF_go(speed);                     //左前电机正转
+  91   1              Motor_LR_go(speed);                     //左后电机正转
+  92   1              Motor_RF_stop();                        //右前电机停止
+  93   1              Motor_RR_stop();                        //右后电机停止
+  94   1              
+  95   1      }
+  96          
+  97          
+  98          /**
+  99            * @brief  通过控制电机来控制小车后退左转
+ 100            * @param  speed 速度（0-20）
+ 101            * @retval 无
+ 102            */
+ 103          void Car_Left_Back(unsigned char speed)
+ 104          {
+ 105   1              Motor_RF_back(speed);           //右前电机反转
+ 106   1              Motor_RR_back(speed);           //右后电机反转
+ 107   1              Motor_LF_stop();                        //左前电机停止
+ 108   1              Motor_LR_stop();                        //左后电机停止
+ 109   1      }
+ 110          
+ 111          
+ 112          /**
+ 113            * @brief  通过控制电机来控制小车后退右转
+ 114            * @param  speed 速度（0-20）
+ 115            * @retval 无
+ 116            */
+C51 COMPILER V9.54   CAR_MOVE                                                              04/17/2025 09:23:28 PAGE 3   
+
+ 117          void Car_Right_Back(unsigned char speed)
+ 118          {
+ 119   1              Motor_LF_back(speed);           //左前电机反转
+ 120   1              Motor_LR_back(speed);           //左后电机反转
+ 121   1              Motor_RF_stop();                        //右前电机停止
+ 122   1              Motor_RR_stop();                        //右后电机停止
+ 123   1      }
+ 124          
+ 125          
+ 126          /**
+ 127            * @brief  通过控制电机来控制小车原地左转
+ 128            * @param  speed 速度（0-20）
+ 129            * @retval 无
+ 130            */
+ 131          void Car_Left_Stop(unsigned char speed)
+ 132          {
+ 133   1              Motor_RF_go(speed);                     //右前电机正转
+ 134   1              Motor_LF_back(speed);           //左前电机反转
+ 135   1              Motor_LR_back(speed);           //左后电机反转
+ 136   1              Motor_RR_go(speed);                     //右后电机正转
+ 137   1      }
+ 138          
+ 139          
+ 140          /**
+ 141            * @brief  通过控制电机来控制小车原地右转
+ 142            * @param  speed 速度（0-20）
+ 143            * @retval 无
+ 144            */
+ 145          void Car_Right_Stop(unsigned char speed)
+ 146          {
+ 147   1              Motor_LF_go(speed);                     //左前电机正转
+ 148   1              Motor_RF_back(speed);           //右前电机反转
+ 149   1              Motor_RR_back(speed);           //右后电机反转
+ 150   1              Motor_LR_go(speed);                     //左后电机正转
+ 151   1      }
+ 152          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    162    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

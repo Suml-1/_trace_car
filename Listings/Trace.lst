@@ -1,0 +1,75 @@
+C51 COMPILER V9.54   TRACE                                                                 04/17/2025 09:23:28 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE TRACE
+OBJECT MODULE PLACED IN .\Objects\Trace.obj
+COMPILER INVOKED BY: D:\KEIL 5C51\C51\BIN\C51.EXE Trace.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\T
+                    -race.lst) OBJECT(.\Objects\Trace.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Car_Move.h"
+   3          #include "Delay.h"
+   4          
+   5          //红外循迹引脚位定义 D1-4分别指代P1-4，代表从右往左四个红外循迹
+   6          sbit D1=P3^4;           
+   7          sbit D2=P3^5;
+   8          sbit D3=P3^6;
+   9          sbit D4=P3^7;
+  10          
+  11          void Trace(void)
+  12          {
+  13   1              if(D1==1&&D2==1&&D3==1&&D4==1)  //全检测到黑线
+  14   1                      {Car_Go(9);}
+  15   1              if(D1==0&&D2==1&&D3==0&&D4==0)  //中间右侧检测到黑线，小车偏左，小车向右移动
+  16   1              {
+  17   2                      Car_Right_Go(9);
+  18   2                      if(D1==0&&D2==0&&D3==0&&D4==0)
+  19   2                              {Car_Go(9);}
+  20   2              }
+  21   1              if(D1==0&&D2==0&&D3==1&&D4==0)  //中间左侧检测到黑线，小车偏右，小车向左移动
+  22   1              {
+  23   2                      Car_Left_Go(9);
+  24   2                      if(D1==0&&D2==0&&D3==0&&D4==0)
+  25   2                              {Car_Go(9);}
+  26   2              }
+  27   1              if(D1==1&&D2==1&&D3==0&&D4==0)  //直角右拐
+  28   1              {
+  29   2                      Car_Go(9);
+  30   2                      Delay(50);
+  31   2                      if(D1==0&&D2==0&&D3==0&&D4==0)
+  32   2                      {
+  33   3                              Car_Stop();
+  34   3                              Delay(50);
+  35   3                              Car_Right_Stop(9);
+  36   3                      }
+  37   2              }
+  38   1              if(D1==0&&D2==0&&D3==1&&D4==1)  //直角左拐
+  39   1              {
+  40   2                      Car_Go(9);
+  41   2                      Delay(50);
+  42   2                      if(D1==0&&D2==0&&D3==0&&D4==0)
+  43   2                      {
+  44   3                              Car_Stop();
+  45   3                              Delay(50);
+  46   3                              Car_Left_Stop(9);
+  47   3                      }
+  48   2              }
+  49   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    188    ----
+   CONSTANT SIZE    =   ----    ----
+C51 COMPILER V9.54   TRACE                                                                 04/17/2025 09:23:28 PAGE 2   
+
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,3 @@
+*.uvgui.* binary
+*.uvopt binary
+*.uvproj binary

@@ -1,0 +1,11 @@
+".\Objects\main.obj",
+".\Objects\Car_Move.obj",
+".\Objects\Delay.obj",
+".\Objects\Timer0.obj",
+".\Objects\Motor.obj",
+".\Objects\Trace.obj",
+".\Objects\Superaudible.obj",
+".\Objects\Timer1.obj" 
+TO ".\Objects\Project" 
+PRINT(".\Listings\Project.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 

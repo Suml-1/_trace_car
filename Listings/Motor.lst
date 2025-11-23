@@ -1,0 +1,126 @@
+C51 COMPILER V9.54   MOTOR                                                                 04/17/2025 09:23:28 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MOTOR
+OBJECT MODULE PLACED IN .\Objects\Motor.obj
+COMPILER INVOKED BY: D:\KEIL 5C51\C51\BIN\C51.EXE Motor.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\M
+                    -otor.lst) OBJECT(.\Objects\Motor.obj)
+
+line level    source
+
+   1          /*电机正反转*/
+   2          /*
+   3          LF左前  LR左后   RF右前   RR右后
+   4          */
+   5          /*电机正反转*/
+   6          #include <REGX52.H>
+   7          #include "Timer0.h"
+   8          
+   9          sbit IN1=P1^0;          //右前电机，高电平正转
+  10          sbit IN2=P1^1;          //右前电机，高电平反转
+  11          sbit IN3=P1^2;          //右后电机，高电平正转
+  12          sbit IN4=P1^3;          //右后电机，高电平反转
+  13          sbit IN5=P1^4;          //左前电机，高电平正转
+  14          sbit IN6=P1^5;          //左前电机，高电平反转
+  15          sbit IN7=P1^6;          //左后电机，高电平正转
+  16          sbit IN8=P1^7;          //左后电机，高电平反转
+  17          sbit EN1=P2^5;          //右电机使能开关
+  18          sbit EN2=P2^5;
+  19          sbit EN3=P2^4;          //左电机使能开关
+  20          sbit EN4=P2^4;
+  21          
+  22          unsigned char Counter,Speed_right,Speed_left;           //Counter:计数值（0-20）  Speed:电机速度调节（0
+             --20）建议至少从8开始
+  23          
+  24          
+  25          // 以下函数的输入参数speed均为通过控制Speed来调节电机速度
+  26          
+  27          //控制右前电机
+  28          void Motor_RF_go(unsigned char speed)           //右前电机正转
+  29          {Speed_right=speed;IN1=1;IN2=0;}
+  30          
+  31          void Motor_RF_back(unsigned char speed)         //右前电机反转
+  32          {Speed_right=speed;IN1=0;IN2=1;}
+  33          
+  34          void Motor_RF_stop(void)                                        //右前电机停止
+  35          {IN1=0;IN2=0;}
+  36          
+  37          
+  38          //控制右后电机
+  39          void Motor_RR_go(unsigned char speed)           //右后电机正转
+  40          {Speed_right=speed;IN3=1;IN4=0;}
+  41          
+  42          void Motor_RR_back(unsigned char speed)         //右后电机反转
+  43          {Speed_right=speed;IN3=0;IN4=1;}
+  44          
+  45          void Motor_RR_stop(void)                                        //右后电机停止
+  46          {IN3=0;IN4=0;}
+  47          
+  48          
+  49          //控制左前电机
+  50          void Motor_LF_go(unsigned char speed)           //左前电机正转
+  51          {Speed_left=speed;IN5=1;IN6=0;}
+  52          
+  53          void Motor_LF_back(unsigned char speed)         //左前电机反转
+C51 COMPILER V9.54   MOTOR                                                                 04/17/2025 09:23:28 PAGE 2   
+
+  54          {Speed_left=speed;IN5=0;IN6=1;}
+  55          
+  56          void Motor_LF_stop(void)                                        //左前电机停止
+  57          {IN5=0;IN6=0;}
+  58          
+  59          
+  60          //控制左后电机
+  61          void Motor_LR_go(unsigned char speed)           //左后电机正转
+  62          {Speed_left=speed;IN7=1;IN8=0;}
+  63          
+  64          void Motor_LR_back(unsigned char speed)         //左后电机反转
+  65          {Speed_left=speed;IN7=0;IN8=1;}
+  66          
+  67          void Motor_LR_stop(void)                                        //左后电机停止
+  68          {IN7=0;IN8=0;}
+  69          
+  70          
+  71          
+  72          
+  73          void Timer0_Routine() interrupt 1
+  74          {
+  75   1              TL0 = 0xA4;                             //设置定时初始值
+  76   1              TH0 = 0xFF;                             //设置定时初始值
+  77   1              Counter++;
+  78   1              Counter%=20;    //计数值变化范围限制在0~19
+  79   1              if(Counter<Speed_right) //计数值小于比较值
+  80   1              {
+  81   2                      EN1=1;          //右电机使能
+  82   2              
+  83   2              }
+  84   1              else                            //计数值大于比较值
+  85   1              {
+  86   2                      EN1=0;          //右电机不使能                    
+  87   2              }
+  88   1              if(Counter<Speed_left)  //计数值小于比较值
+  89   1              {
+  90   2                      EN3=1;          //左电机使能
+  91   2              
+  92   2              }
+  93   1              else                            //计数值大于比较值
+  94   1              {
+  95   2                      EN3=0;          //左电机不使能                    
+  96   2              }
+  97   1              
+  98   1              
+  99   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    132    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
